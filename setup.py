@@ -7,7 +7,7 @@ setup(
 
     license = "AGPLv3 or later",
     keywords = "translation",
-    packages = ["simplynews_engines"],
+    packages = ["simplytranslate_engines"],
     install_requires = [
         "lxml",
         "requests"

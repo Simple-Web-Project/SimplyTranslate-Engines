@@ -1,2 +1,5 @@
 __pycache__
 simplytranslate_engines/__pycache__
+dist/
+build/
+simplytranslate_engines.egg-info/

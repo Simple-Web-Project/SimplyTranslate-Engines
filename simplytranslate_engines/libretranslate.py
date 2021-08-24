@@ -23,6 +23,21 @@ class LibreTranslateEngine:
 
         return self._supported_languages
 
+    def detect_language(self, text):
+        form = { "q": text }
+
+        if self.api_key is not None:
+            form["api_key"] = self.api_key
+
+        r = requests.post(f"{self.url}/detect", json=form)
+
+        response = json.loads(r.text)
+
+        if type(response) != list:
+            return response["error"] if "error" in response else "odd, something went wrong"
+
+        return max(response, key=lambda item: item['confidence'])['language']
+
     def translate(self, text, to_language, from_language="auto"):
         form = {
             "q": text,

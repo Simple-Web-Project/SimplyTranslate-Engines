@@ -116,6 +116,9 @@ class GoogleTranslateEngine:
             "Zulu": "zu",
         }
 
+    def detect_language(self, text):
+        return None
+
     def translate(self, text, to_language, from_language="auto"):
         r = requests.get(
             "https://translate.google.com/m",

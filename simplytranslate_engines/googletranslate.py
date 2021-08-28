@@ -1,4 +1,5 @@
 import lxml.html as lxml
+from urllib.parse import urlencode
 import requests
 
 class GoogleTranslateEngine:
@@ -120,7 +121,7 @@ class GoogleTranslateEngine:
         return None
 
     def get_tts(self, text, language):
-        return f"https://translate.google.com/translate_tts?tl={language}&q={text}&client=tw-ob"
+        return f"https://translate.google.com/translate_tts?tl={urlencode(language)}&q={urlencode(text)}&client=tw-ob"
 
     def translate(self, text, to_language, from_language="auto"):
         r = requests.get(

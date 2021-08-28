@@ -38,6 +38,9 @@ class LibreTranslateEngine:
 
         return max(response, key=lambda item: item['confidence'])['language']
 
+    def get_tts(self, text, language):
+        return None
+
     def translate(self, text, to_language, from_language="auto"):
         form = {
             "q": text,

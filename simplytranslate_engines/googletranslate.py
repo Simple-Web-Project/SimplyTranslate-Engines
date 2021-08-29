@@ -121,7 +121,17 @@ class GoogleTranslateEngine:
         return None
 
     def get_tts(self, text, language):
-        return f"https://translate.google.com/translate_tts?tl={urlencode(language)}&q={urlencode(text)}&client=tw-ob"
+        if text == None or language == None:
+            return None
+        elif len(text) == 0 or len(language) == 0:
+            return None
+
+        params = urlencode({
+            "tl": language,
+            "q": text.strip(),
+            "client": "tw-ob"
+        })
+        return f"https://translate.google.com/translate_tts?{params}"
 
     def translate(self, text, to_language, from_language="auto"):
         r = requests.get(

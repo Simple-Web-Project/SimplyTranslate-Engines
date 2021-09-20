@@ -126,6 +126,9 @@ class GoogleTranslateEngine:
         elif len(text) == 0 or len(language) == 0:
             return None
 
+        if language == "auto":
+            language = "en"
+
         params = urlencode({
             "tl": language,
             "q": text.strip(),

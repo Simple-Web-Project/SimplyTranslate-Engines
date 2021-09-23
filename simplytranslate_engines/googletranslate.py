@@ -4,6 +4,7 @@ import requests
 
 class GoogleTranslateEngine:
     name = "google"
+    supports_tts = True
 
     def get_supported_languages(self):
         return {

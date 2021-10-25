@@ -50,7 +50,7 @@ class DeeplEngine:
     def translate(self, text, to_language, from_language="auto"):
         if self.delay_begin != None:
             difference = datetime.now() - self.delay_begin
-            if difference.seconds > 10:
+            if difference.seconds > 120:
                 self.delay_begin = None
                 self.session = requests.Session()
             else:

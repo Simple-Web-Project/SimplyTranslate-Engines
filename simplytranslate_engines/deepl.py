@@ -1,3 +1,6 @@
+# The code included in this file was originally inspired by https://github.com/KeKsBoTer/deepl-cli/blob/master/deepl.py
+# Sadly I could find no license file attached to this
+
 import requests
 import time
 import json

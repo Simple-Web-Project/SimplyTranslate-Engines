@@ -1,6 +1,7 @@
 import lxml.html as lxml
 from urllib.parse import urlencode
 import requests
+import json
 
 class GoogleTranslateEngine:
     name = "google"
@@ -138,16 +139,28 @@ class GoogleTranslateEngine:
 
     def translate(self, text, to_language, from_language="auto"):
         r = requests.get(
-            "https://translate.google.com/m",
+            "https://translate.googleapis.com/translate_a/single?client=gtx&ie=UTF-8&oe=UTF-8&dt=bd&dt=ex&dt=ld&dt=md&dt=rw&dt=rm&dt=ss&dt=t&dt=at&dt=qc",
             params={
-                "q": text,
                 "sl": from_language,
-                "tl": to_language
-            })
+                "tl": to_language,
+                "hl": to_language,
+                "q": text
+            }
+        )
 
-        doc = lxml.fromstring(r.text)
-        for container in doc.find_class("result-container"):
-            return container.text_content()
+        try:
+            j = json.loads(r.text)
+            request_body = j[0]
+            translation = request_body[0][0] # this is the translation body
+
+            return translation
+
+            # This will probably be used in a future version
+            #definition_body = request_body[1][0]
+        except Exception as e:
+            print("Error translating using Google Translate:")
+            print(str(e))
+            pass
 
         return ""
 

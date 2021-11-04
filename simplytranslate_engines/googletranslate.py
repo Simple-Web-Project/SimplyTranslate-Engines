@@ -139,8 +139,11 @@ class GoogleTranslateEngine:
 
     def translate(self, text, to_language, from_language="auto"):
         r = requests.get(
-            "https://translate.googleapis.com/translate_a/single?client=gtx&ie=UTF-8&oe=UTF-8&dt=bd&dt=ex&dt=ld&dt=md&dt=rw&dt=rm&dt=ss&dt=t&dt=at&dt=qc",
+            "https://translate.googleapis.com/translate_a/single?dt=bd&dt=ex&dt=ld&dt=md&dt=rw&dt=rm&dt=ss&dt=t&dt=at&dt=qc",
             params={
+                "client": "gtx", # client
+                "ie": "UTF-8", # input encoding
+                "oe": "UTF-8", # output encoding
                 "sl": from_language,
                 "tl": to_language,
                 "hl": to_language,
@@ -165,4 +168,4 @@ class GoogleTranslateEngine:
         return ""
 
 if __name__ == "__main__":
-    print(GoogleTranslateEngine().translate("hello", "fr", "en"))
+    print(GoogleTranslateEngine().translate("hello\nwhat are you doing?", "fr", "en"))

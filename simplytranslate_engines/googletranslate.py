@@ -158,7 +158,8 @@ class GoogleTranslateEngine:
             translation = ""
 
             for i in range(len(request_body)):
-                translation += request_body[i][0]
+                if request_body[i][0] != None:
+                    translation += request_body[i][0]
 
             return translation
 
@@ -172,4 +173,4 @@ class GoogleTranslateEngine:
         return ""
 
 if __name__ == "__main__":
-    print(GoogleTranslateEngine().translate("hello\nwhat are you doing?", "fr", "en"))
+    print(GoogleTranslateEngine().translate("Hello Weird World!!\n\n\nHi!", "fr", "en"))

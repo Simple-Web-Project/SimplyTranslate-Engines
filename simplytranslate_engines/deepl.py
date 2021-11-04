@@ -8,6 +8,7 @@ from datetime import datetime
 
 class DeeplEngine:
     name = "deepl"
+    display_name = "DeepL (Testing)"
 
     def __init__(self):
         self.session = requests.Session()

@@ -7,6 +7,7 @@ class LibreTranslateEngine:
         self.api_key = api_key
 
     name = "libre"
+    display_name = "LibreTranslate"
 
     _supported_languages = None
 

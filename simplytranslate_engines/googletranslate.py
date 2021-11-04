@@ -5,6 +5,7 @@ import json
 
 class GoogleTranslateEngine:
     name = "google"
+    display_name = "Google"
 
     def get_supported_languages(self):
         return {

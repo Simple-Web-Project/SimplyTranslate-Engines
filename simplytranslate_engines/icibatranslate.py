@@ -3,6 +3,7 @@ import hashlib
 
 class IcibaTranslateEngine:
     name = "iciba"
+    display_name = "ICIBA"
 
     def get_supported_languages(self):
         return {

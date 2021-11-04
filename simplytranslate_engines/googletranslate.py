@@ -153,8 +153,12 @@ class GoogleTranslateEngine:
 
         try:
             j = json.loads(r.text)
+
             request_body = j[0]
-            translation = request_body[0][0] # this is the translation body
+            translation = ""
+
+            for i in range(len(request_body)):
+                translation += request_body[i][0]
 
             return translation
 

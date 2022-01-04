@@ -138,6 +138,10 @@ class GoogleTranslateEngine:
         })
         return f"https://translate.google.com/translate_tts?{params}"
 
+    """
+    It turns out that the googleapis.com domain is being rate-limited which becomes problematic on large instances, because of that we use the "old" way
+    of fetching the translation using the mobile page
+
     def translate(self, text, to_language, from_language="auto"):
         r = requests.get(
             "https://translate.googleapis.com/translate_a/single?dt=bd&dt=ex&dt=ld&dt=md&dt=rw&dt=rm&dt=ss&dt=t&dt=at&dt=qc",
@@ -172,6 +176,25 @@ class GoogleTranslateEngine:
             pass
 
         return ""
+    """"
+
+    def translate(self, text, to_language, from_language="auto"):
+        r = requests.get(
+            "https://translate.google.com/m",
+            params = {
+                "tl": to_language,
+                "hl": to_language,
+                "q": text
+            }
+        )
+
+        doc = lxml.fromstring(r.text)
+        for container in doc.find_class("result-container"):
+            return container.text_content()
+
+        return ""
+
+
 
 if __name__ == "__main__":
     print(GoogleTranslateEngine().translate("Hello Weird World!!\n\n\nHi!", "fr", "en"))

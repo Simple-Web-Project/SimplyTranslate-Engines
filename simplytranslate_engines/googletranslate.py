@@ -176,7 +176,7 @@ class GoogleTranslateEngine:
             pass
 
         return ""
-    """"
+    """
 
     def translate(self, text, to_language, from_language="auto"):
         r = requests.get(

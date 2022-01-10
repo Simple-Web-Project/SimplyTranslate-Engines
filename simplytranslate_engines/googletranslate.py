@@ -7,7 +7,12 @@ class GoogleTranslateEngine:
     name = "google"
     display_name = "Google"
 
-    def get_supported_languages(self):
+    def get_supported_source_languages(self):
+        langs = {"Autodetect": "auto"}
+        langs = langs | self.get_supported_target_languages()
+        return langs
+
+    def get_supported_target_languages(self):
         return {
             "Afrikaans": "af",
             "Albanian": "sq",

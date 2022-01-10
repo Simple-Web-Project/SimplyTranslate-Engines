@@ -5,7 +5,12 @@ class IcibaTranslateEngine:
     name = "iciba"
     display_name = "ICIBA"
 
-    def get_supported_languages(self):
+    def get_supported_source_languages(self):
+        langs = {"Autodetect": "auto"}
+        langs = langs | self.get_supported_target_languages()
+        return langs
+
+    def get_supported_target_languages(self):
         return {
             # ICIBA does have an API, but they return Chinese names.
             # For languages already present in Google translate, the English

@@ -5,7 +5,7 @@ def get_engine(engine_name, engines, default_engine):
     """
     return next((engine for engine in engines if engine.name == engine_name), default_engine)
 
-def to_full_name(lang_code, engine):
+def to_full_name(lang_code, engine, type_="source"):
     """
     Returns the full name of `lang_code` from
     `engine.get_supported_languages()` ("auto" can also be passed), or `None`
@@ -16,13 +16,19 @@ def to_full_name(lang_code, engine):
     if lang_code == "auto":
         return "Autodetect"
 
-    for key, value in engine.get_supported_languages().items():
+    supported_langs = None
+    if type_ == "source":
+        supported_langs = engine.get_supported_source_languages()
+    elif type_ == "target":
+        supported_langs = engine.get_supported_target_languages()
+
+    for key, value in supported_langs.items():
         if value.lower() == lang_code:
             return key
 
     return None
 
-def to_lang_code(lang, engine):
+def to_lang_code(lang, engine, type_="source"):
     """
     Returns the corresponding language code of `lang` from
     `engine.get_supported_languages()` (a language code can also be passed,
@@ -34,7 +40,13 @@ def to_lang_code(lang, engine):
     if lang == "autodetect" or lang == "auto":
         return "auto"
 
-    for key, value in engine.get_supported_languages().items():
+    supported_langs = None
+    if type_ == "source":
+        supported_langs = engine.get_supported_source_languages()
+    elif type_ == "target":
+        supported_langs = engine.get_supported_target_languages()
+
+    for key, value in supported_langs.items():
         if key.lower() == lang or value.lower() == lang:
             return value
 

@@ -5,7 +5,12 @@ class ReversoTranslateEngine:
     name = "reverso"
     display_name = "Reverso"
 
-    def get_supported_languages(self):
+    def get_supported_source_languages(self):
+        langs = {"Autodetect": "auto"}
+        langs = langs | self.get_supported_target_languages()
+        return langs
+
+    def get_supported_target_languages(self):
         return {
             "Arabic": "ara",
             "Chinese (Simplified)": "chi",  # marketed as just "Chinese"

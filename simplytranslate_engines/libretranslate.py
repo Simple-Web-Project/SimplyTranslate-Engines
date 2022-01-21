@@ -68,4 +68,4 @@ class LibreTranslateEngine:
             return "odd, something went wrong"
 
 if __name__ == "__main__":
-    print(LibreTranslateEngine("https://libretranslate.de").translate("lutsch meinen schwanz", "en"))
+    print(LibreTranslateEngine("https://libretranslate.de").translate("dies ist ein sehr einfacher und politisch korrekter test", "en"))

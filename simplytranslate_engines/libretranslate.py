@@ -12,9 +12,7 @@ class LibreTranslateEngine:
     _supported_languages = None
 
     def get_supported_source_languages(self):
-        langs = {"Autodetect": "auto"}
-        langs = langs | self.get_supported_target_languages()
-        return langs
+        return {"Autodetect": "auto", **self.get_supported_target_languages()}
 
     def get_supported_target_languages(self):
         if self._supported_languages is not None:

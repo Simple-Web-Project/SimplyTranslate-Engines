@@ -54,6 +54,7 @@ class DeeplEngine:
 
     def translate(self, text, to_language, from_language="auto"):
 
+        # NOTE: this takes insanely long to process
         translation = self.deepl.translate(text, to_language, from_language)
 
         return translation
@@ -62,6 +63,6 @@ if __name__ == "__main__":
     engine = DeeplEngine()
 
     for i in range(1, 15):
-        print(engine.translate("You can't fuck with me", "EN", "DE"))
+        print(engine.translate("You are on the testing lane", "EN", "DE"))
         time.sleep(i)
 

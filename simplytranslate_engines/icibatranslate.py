@@ -15,10 +15,10 @@ class IcibaTranslateEngine:
             # names in that engine file are used; Otherwise official names
             # as researched on Wikipedia are used. They're validated against
             # the Chinese names to the best of my ability.
-            
+
             # Missing "cni", "kbh", "tmh"
             # due to conflict between ISO-639 table and Chinese label
-            
+
             # one "#" means on iciba but not on google
             "Achinese": "ace", #
             "Achuar-Shiwiar": "acu", #
@@ -213,6 +213,7 @@ class IcibaTranslateEngine:
         return None
 
     def translate(self, text, to_language, from_language="auto"):
+        myMap = {}
         r = requests.post(
             "https://ifanyi.iciba.com/index.php",
             params={
@@ -228,7 +229,9 @@ class IcibaTranslateEngine:
                 "q": text
             }).json()
 
-        return r['content']['out']
+        myMap['translated-text'] = r['content']['out']
+        return myMap
+
 
 if __name__ == "__main__":
     print(IcibaTranslateEngine().translate("hello", "fr", "en"))

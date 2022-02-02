@@ -46,6 +46,7 @@ class LibreTranslateEngine:
         return None
 
     def translate(self, text, to_language, from_language="auto"):
+        myMap = {}
         form = {
             "q": text,
             "source": from_language,
@@ -59,11 +60,12 @@ class LibreTranslateEngine:
 
         response = json.loads(r.text)
         if "translatedText" in response:
-            return response["translatedText"]
-        elif "error" in response:
-            return response["error"]
-        else:
-            return "odd, something went wrong"
+            myMap['translated-text'] = response["translatedText"]
+        # elif "error" in response:
+        #     return
+        # else:
+        return myMap
+
 
 if __name__ == "__main__":
     print(LibreTranslateEngine("https://libretranslate.de").translate("dies ist ein sehr einfacher und politisch korrekter test", "en"))

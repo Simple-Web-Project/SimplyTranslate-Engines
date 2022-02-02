@@ -53,11 +53,12 @@ class DeeplEngine:
         return None
 
     def translate(self, text, to_language, from_language="auto"):
+        myMap = {}
 
         # NOTE: this takes insanely long to process
         translation = self.deepl.translate(text, to_language, from_language)
-
-        return translation
+        myMap['translated-text'] = translation
+        return myMap
 
 if __name__ == "__main__":
     engine = DeeplEngine()

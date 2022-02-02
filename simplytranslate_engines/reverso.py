@@ -62,12 +62,15 @@ class ReversoTranslateEngine:
         return None
 
     def translate(self, text, to_language, from_language="auto"):
+        myMap = {}
         if from_language == "auto":
             from_language = self.detect_language(text)
         if from_language == to_language:
-            return text
-        r = self.call_api(text, to_language, from_language)
-        return r["translation"][0]
+            myMap["translated-text"] = text
+        else:
+            r = self.call_api(text, to_language, from_language)
+            myMap["translated-text"] = r["translation"][0]
+        return myMap
 
 
 if __name__ == "__main__":

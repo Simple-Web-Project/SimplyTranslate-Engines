@@ -136,11 +136,7 @@ class GoogleTranslateEngine:
         if language == "auto":
             language = "en"
 
-        params = urlencode({
-            "tl": language,
-            "q": text.strip(),
-            "client": "tw-ob"
-        })
+        params = urlencode({"tl": language, "q": text.strip(), "client": "tw-ob"})
         return f"https://translate.google.com/translate_tts?{params}"
 
     """
@@ -184,19 +180,19 @@ class GoogleTranslateEngine:
     """
 
     def translate(self, text, to_language, from_language="auto"):
-        myMap = {}
+        my_map = {}
         try:
             url = "https://translate.google.com/_/TranslateWebserverUi/data/batchexecute?rpcids=MkEWBc&rt=c"
 
-            req = json.dumps(
-                [[text, from_language, to_language, True], [None]])
+            req = json.dumps([[text, from_language, to_language, True], [None]])
             req = [[["MkEWBc", req, None, "generic"]]]
             req = "f.req=" + quote(json.dumps(req))  # URL encode this
 
-            r = requests.post(url,
-                            headers={
-                                'Content-Type': 'application/x-www-form-urlencoded'},
-                            data=req)
+            r = requests.post(
+                url,
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                data=req,
+            )
 
             num_match = re.search(r"\n(\d+)\n", r.text)
             front_pad = num_match.span()[1]
@@ -207,62 +203,65 @@ class GoogleTranslateEngine:
             data = json.loads(data)
 
             translation_data = data[1][0][0]
-            translation_data = translation_data[len(translation_data)-1]
+            translation_data = translation_data[len(translation_data) - 1]
 
-            myList = []
-            for item in translation_data:
-                myList.append(item[0])
+            translation = " ".join(item[0] for item in translation_data).replace(
+                "\n ", "\n"
+            )
 
-            translation = " ".join(myList).replace("\n ", "\n")
-
-            myMap["translated-text"] = translation
+            my_map["translated-text"] = translation
             try:
-                myMap["definitions"] = {}
+                my_map["definitions"] = {}
                 for x in range(0, len(data[3][1][0])):
                     definition_type = data[3][1][0][x][0]
-                    myMap["definitions"][definition_type] = []
+                    my_map["definitions"][definition_type] = []
                     for i in range(0, len(data[3][1][0][x][1])):
-                        myMap["definitions"][definition_type].append({})
+                        my_map["definitions"][definition_type].append({})
                         definition_box = data[3][1][0][x][1][i]
 
                         try:
-                            dictionary = definition_box[4][0][0]
-                            myMap["definitions"][definition_type][i]["dictionary"] = dictionary
+                            my_map["definitions"][definition_type][i][
+                                "dictionary"
+                            ] = definition_box[4][0][0]
                         except:
                             pass
 
                         try:
-                            definition = definition_box[0]
-                            myMap["definitions"][definition_type][i]["definition"] = definition
+                            my_map["definitions"][definition_type][i][
+                                "definition"
+                            ] = definition_box[0]
                         except:
                             pass
 
                         try:
                             use_in_sentence = definition_box[1]
                             if use_in_sentence is not None:
-                                myMap["definitions"][definition_type][i]["use-in-sentence"] = use_in_sentence
+                                my_map["definitions"][definition_type][i][
+                                    "use-in-sentence"
+                                ] = use_in_sentence
                         except:
                             pass
 
                         try:
                             synonyms = definition_box[5]
-                            myMap["definitions"][definition_type][i]["synonyms"] = {}
+                            my_map["definitions"][definition_type][i]["synonyms"] = {}
                             for synonym_box in synonyms:
                                 synonym_type = ""
                                 try:
                                     synonym_type = synonym_box[1][0][0]
                                 except:
                                     pass
-                                myMap["definitions"][definition_type][i]["synonyms"][synonym_type] = [
-                                ]
+                                my_map["definitions"][definition_type][i]["synonyms"][
+                                    synonym_type
+                                ] = []
 
                                 try:
                                     synonym_list = synonym_box[0]
                                     for synonym_type_word in synonym_list:
                                         try:
-                                            synonym_type_word_string = synonym_type_word[0]
-                                            myMap["definitions"][definition_type][i]["synonyms"][synonym_type].append(
-                                                synonym_type_word_string)
+                                            my_map["definitions"][definition_type][i][
+                                                "synonyms"
+                                            ][synonym_type].append(synonym_type_word[0])
                                         except:
                                             pass
                                 except:
@@ -275,54 +274,57 @@ class GoogleTranslateEngine:
 
             try:
                 translation_box = data[3][5][0]
-                myMap["translations"] = {}
+                my_map["translations"] = {}
                 for x in range(0, len(translation_box)):
                     try:
                         translation_type = translation_box[x][0]
-                        myMap["translations"][translation_type] = {}
+                        my_map["translations"][translation_type] = {}
                         translation_names_box = translation_box[x][1]
                         for i in range(0, len(translation_names_box)):
-                            myMap["translations"][translation_type][translation_names_box[i][0]] = {}
+                            my_map["translations"][translation_type][
+                                translation_names_box[i][0]
+                            ] = {}
                             frequency = str(translation_names_box[i][3])
                             if frequency == "3":
                                 frequency = "1"
                             elif frequency == "1":
                                 frequency = "3"
 
-                            myMap["translations"][translation_type][translation_names_box[i][0]]["words"] = []
+                            my_map["translations"][translation_type][
+                                translation_names_box[i][0]
+                            ]["words"] = []
                             for z in range(0, len(translation_names_box[i][2])):
-                                myMap["translations"][translation_type][translation_names_box[i][0]]["words"].append(
-                                    translation_names_box[i][2][z])
+                                my_map["translations"][translation_type][
+                                    translation_names_box[i][0]
+                                ]["words"].append(translation_names_box[i][2][z])
 
-                            myMap["translations"][translation_type][translation_names_box[i]
-                                                                                [0]]["frequency"] = frequency+"/3"
+                            my_map["translations"][translation_type][
+                                translation_names_box[i][0]
+                            ]["frequency"] = (frequency + "/3")
                     except:
                         pass
 
             except:
                 pass
-        except :
+        except:
             pass
 
-        if myMap['translated-text'] is None:
+        if my_map["translated-text"] is None:
             r = requests.get(
                 "https://translate.google.com/m",
-                params = {
-                    "tl": to_language,
-                    "hl": to_language,
-                    "q": text
-                }
+                params={"tl": to_language, "hl": to_language, "q": text},
             )
 
             doc = lxml.fromstring(r.text)
             for container in doc.find_class("result-container"):
-                myMap['translated-text'] = container.text_content()
+                my_map["translated-text"] = container.text_content()
 
-        return myMap
+        return my_map
+
 
 if __name__ == "__main__":
     print(GoogleTranslateEngine().translate("Hello Weird World!!\n\n\nHi!", "fr", "en"))
 
-    data  = GoogleTranslateEngine().translate_advanced("House", "fr", "en")
+    data = GoogleTranslateEngine().translate_advanced("House", "fr", "en")
     json_object = json.dumps(data, ensure_ascii=False, indent=4)
     print(json_object)

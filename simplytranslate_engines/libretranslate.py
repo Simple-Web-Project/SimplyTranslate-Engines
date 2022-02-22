@@ -1,6 +1,7 @@
 import json
 import requests
 
+
 class LibreTranslateEngine:
     def __init__(self, url, api_key=None):
         self.url = url
@@ -21,14 +22,12 @@ class LibreTranslateEngine:
         request = requests.post(f"{self.url}/languages")
         response = json.loads(request.text)
 
-        self._supported_languages = {
-            lang["name"]: lang["code"] for lang in response
-        }
+        self._supported_languages = {lang["name"]: lang["code"] for lang in response}
 
         return self._supported_languages
 
     def detect_language(self, text):
-        form = { "q": text }
+        form = {"q": text}
 
         if self.api_key is not None:
             form["api_key"] = self.api_key
@@ -38,20 +37,20 @@ class LibreTranslateEngine:
         response = json.loads(r.text)
 
         if type(response) != list:
-            return response["error"] if "error" in response else "odd, something went wrong"
+            return (
+                response["error"]
+                if "error" in response
+                else "odd, something went wrong"
+            )
 
-        return max(response, key=lambda item: item['confidence'])['language']
+        return max(response, key=lambda item: item["confidence"])["language"]
 
     def get_tts(self, text, language):
         return None
 
     def translate(self, text, to_language, from_language="auto"):
         myMap = {}
-        form = {
-            "q": text,
-            "source": from_language,
-            "target": to_language
-        }
+        form = {"q": text, "source": from_language, "target": to_language}
 
         if self.api_key is not None:
             form["api_key"] = self.api_key
@@ -60,12 +59,17 @@ class LibreTranslateEngine:
 
         response = json.loads(r.text)
         if "translatedText" in response:
-            myMap['translated-text'] = response["translatedText"]
-        # elif "error" in response:
-        #     return
-        # else:
-        return myMap
+            translated_text = response["translatedText"]
+        elif "error" in response:
+            translated_text = response["error"]
+        else:
+            translated_text = "odd, something went wrong"
+        return {"translated-text": translated_text}
 
 
 if __name__ == "__main__":
-    print(LibreTranslateEngine("https://libretranslate.de").translate("dies ist ein sehr einfacher und politisch korrekter test", "en"))
+    print(
+        LibreTranslateEngine("https://libretranslate.de").translate(
+            "dies ist ein sehr einfacher und politisch korrekter test", "en"
+        )
+    )

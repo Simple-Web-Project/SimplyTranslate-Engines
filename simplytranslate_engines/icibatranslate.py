@@ -1,6 +1,7 @@
 import requests
 import hashlib
 
+
 class IcibaTranslateEngine:
     name = "iciba"
     display_name = "ICIBA"
@@ -15,150 +16,148 @@ class IcibaTranslateEngine:
             # names in that engine file are used; Otherwise official names
             # as researched on Wikipedia are used. They're validated against
             # the Chinese names to the best of my ability.
-
             # Missing "cni", "kbh", "tmh"
             # due to conflict between ISO-639 table and Chinese label
-
             # one "#" means on iciba but not on google
-            "Achinese": "ace", #
-            "Achuar-Shiwiar": "acu", #
+            "Achinese": "ace",  #
+            "Achuar-Shiwiar": "acu",  #
             "Afrikaans": "af",
-            "Aguaruna": "agr", #
-            "Akawaio": "ake", #
+            "Aguaruna": "agr",  #
+            "Akawaio": "ake",  #
             "Albanian": "sq",
             "Amharic": "am",
             "Arabic": "ar",
             "Armenian": "hy",
             "Azerbaijani": "az",
-            "Barasana-Eduria": "bsn", #
-            "Bashkir": "ba", #
+            "Barasana-Eduria": "bsn",  #
+            "Bashkir": "ba",  #
             "Basque": "eu",
             "Belarusian": "be",
-            "Bemba": "bem", #
+            "Bemba": "bem",  #
             "Bengali": "bn",
-            "Berber": "ber", #
-            "Bislama": "bi", #
+            "Berber": "ber",  #
+            "Bislama": "bi",  #
             "Bosnian": "bs",
-            "Breton": "br", #
+            "Breton": "br",  #
             "Bulgarian": "bg",
-            "Cabécar": "cjp", #
+            "Cabécar": "cjp",  #
             "Cantonese": "yue",
             "Catalan": "ca",
             "Cebuano": "ceb",
-            "Chamorro": "cha", #
-            "Cherokee": "chr", #
+            "Chamorro": "cha",  #
+            "Cherokee": "chr",  #
             "Chichewa": "ny",
-            "Chinese (Simplified)": "zh", # "zh-cn" on Google
-            "Chinese (Traditional)": "cht", # "zh-tw" on Google
+            "Chinese (Simplified)": "zh",  # "zh-cn" on Google
+            "Chinese (Traditional)": "cht",  # "zh-tw" on Google
             "Chuvash": "cv",
-            "Coptic": "cop", #
+            "Coptic": "cop",  #
             "Corsican": "co",
             "Croatian": "hr",
             "Czech": "cs",
             "Danish": "da",
-            "Dhivehi": "dv", #
-            "Dinka": "dik", #
+            "Dhivehi": "dv",  #
+            "Dinka": "dik",  #
             "Dutch": "nl",
-            "Dzongkha": "dz", #
+            "Dzongkha": "dz",  #
             "English": "en",
             "Esperanto": "eo",
             "Estonian": "et",
-            "Ewe": "ee", #
-            "Faroese": "fo", #
-            "Fijian": "fj", #
-            "Filipino": "fil", # "tl" on Google
+            "Ewe": "ee",  #
+            "Faroese": "fo",  #
+            "Fijian": "fj",  #
+            "Filipino": "fil",  # "tl" on Google
             "Finnish": "fi",
             "French": "fr",
             "Frisian": "fy",
-            "Galela": "gbi", #
+            "Galela": "gbi",  #
             "Galician": "gl",
-            "Ganda": "lg", #
-            "Georgian": "jy", # "ka" on Google
+            "Ganda": "lg",  #
+            "Georgian": "jy",  # "ka" on Google
             "German": "de",
             "Greek": "el",
-            "Guerrero Amuzgo": "amu", #
+            "Guerrero Amuzgo": "amu",  #
             "Gujarati": "gu",
             "Haitian Creole": "ht",
             "Hausa": "ha",
             "Hawaiian": "haw",
-            "Hebrew": "he", # "iw" on Google
+            "Hebrew": "he",  # "iw" on Google
             "Hindi": "hi",
-            "Hmong Daw": "mww", #
-            "Hmong": "hmn", # not in iciba
+            "Hmong Daw": "mww",  #
+            "Hmong": "hmn",  # not in iciba
             "Hungarian": "hu",
             "Icelandic": "is",
             "Igbo": "ig",
             "Indonesian": "id",
             "Irish": "ga",
             "Italian": "it",
-            "Jacalteco": "jac", #
+            "Jacalteco": "jac",  #
             "Japanese": "ja",
-            "Javanese": "jv", # "jw" on Google
-            "Kabyle": "kab", #
+            "Javanese": "jv",  # "jw" on Google
+            "Kabyle": "kab",  #
             "Kannada": "kn",
-            "Kaqchikel": "cak", #
-            "Kazakh": "ka", # Google only has "kk"
-            "Kazakh (Cyrillic)": "kk", # Google has it as just "Kazakh"
-            "Kekchí": "kek", #
+            "Kaqchikel": "cak",  #
+            "Kazakh": "ka",  # Google only has "kk"
+            "Kazakh (Cyrillic)": "kk",  # Google has it as just "Kazakh"
+            "Kekchí": "kek",  #
             "Khmer": "km",
             "Kinyarwanda": "rw",
-            "Kongo": "kg", #
+            "Kongo": "kg",  #
             "Korean": "ko",
             "Kurdish (Kurmanji)": "ku",
             "Kyrgyz": "ky",
             "Lao": "lo",
             "Latin": "la",
             "Latvian": "lv",
-            "Lingala": "ln", #
+            "Lingala": "ln",  #
             "Lithuanian": "lt",
-            "Lukpa": "dop", #
+            "Lukpa": "dop",  #
             "Luxembourgish": "lb",
             "Macedonian": "mk",
             "Malagasy": "mg",
             "Malay": "ms",
             "Malayalam": "ml",
             "Maltese": "mt",
-            "Mam": "mam", #
-            "Manx": "gv", #
+            "Mam": "mam",  #
+            "Manx": "gv",  #
             "Maori": "mi",
             "Marathi": "mr",
-            "Mari (Eastern)": "mhr", #
-            "Mari (Western)": "mrj", #
+            "Mari (Eastern)": "mhr",  #
+            "Mari (Western)": "mrj",  #
             "Mongolian": "mn",
-            "Montenegrin": "me", #
+            "Montenegrin": "me",  #
             "Myanmar (Burmese)": "my",
-            "Nahuatl": "nhg", #
-            "Ndyuka": "djk", #
+            "Nahuatl": "nhg",  #
+            "Ndyuka": "djk",  #
             "Nepali": "ne",
             "Norwegian": "no",
             "Odia (Oriya)": "or",
             "Ojibwa": "ojb",
-            "Oromo": "om", #
-            "Ossetian": "os", #
-            "Paite": "pck", #
-            "Papiamento": "pap", #
+            "Oromo": "om",  #
+            "Ossetian": "os",  #
+            "Paite": "pck",  #
+            "Papiamento": "pap",  #
             "Pashto": "ps",
             "Persian": "fa",
             "Polish": "pl",
             "Portuguese": "pt",
-            "Potawatomi": "pot", #
+            "Potawatomi": "pot",  #
             "Punjabi": "pa",
-            "Querétaro Otomi": "otq", #
-            "Quiché": "quc", #
-            "Quichua": "quw", #
-            "Quiotepec Chinantec": "chq", #
-            "Romani": "rmn", #
+            "Querétaro Otomi": "otq",  #
+            "Quiché": "quc",  #
+            "Quichua": "quw",  #
+            "Quiotepec Chinantec": "chq",  #
+            "Romani": "rmn",  #
             "Romanian": "ro",
-            "Rundi": "rn", #
+            "Rundi": "rn",  #
             "Russian": "ru",
             "Samoan": "sm",
-            "Sango": "sg", #
+            "Sango": "sg",  #
             "Scots Gaelic": "gd",
             "Serbian": "sr",
-            "Seselwa Creole French": "crs", #
+            "Seselwa Creole French": "crs",  #
             "Sesotho": "st",
             "Shona": "sn",
-            "Shuar": "jiv", #
+            "Shuar": "jiv",  #
             "Sindhi": "sd",
             "Sinhala": "si",
             "Slovak": "sk",
@@ -168,41 +167,41 @@ class IcibaTranslateEngine:
             "Sundanese": "su",
             "Swahili": "sw",
             "Swedish": "sv",
-            "Syriac": "syc", # considered "extinct" but is somehow supported
-            "Tachelhit": "shi", #
-            "Tahitian": "ty", #
+            "Syriac": "syc",  # considered "extinct" but is somehow supported
+            "Tachelhit": "shi",  #
+            "Tahitian": "ty",  #
             "Tajik": "tg",
             "Tamil": "ta",
             "Tatar": "tt",
             "Telugu": "te",
-            "Tetum": "tet", #
+            "Tetum": "tet",  #
             "Thai": "th",
-            "Tigre": "ti", #
-            "Tiwi": "tw", #
-            "Tok Pisin": "tpi", #
-            "Tonga": "to", #
+            "Tigre": "ti",  #
+            "Tiwi": "tw",  #
+            "Tok Pisin": "tpi",  #
+            "Tonga": "to",  #
             "Tsonga": "ts",
-            "Tswana": "tn", #
+            "Tswana": "tn",  #
             "Turkish": "tr",
             "Turkmen": "tk",
-            "Udmurt": "udm", #
+            "Udmurt": "udm",  #
             "Ukrainian": "uk",
-            "Uma": "ppk", #
+            "Uma": "ppk",  #
             "Urdu": "ur",
-            "Uspanteco": "usp", #
-            "Uyghur": "uy", # "ug" on Google
+            "Uspanteco": "usp",  #
+            "Uyghur": "uy",  # "ug" on Google
             "Uzbek": "uz",
-            "Venda": "ve", #
+            "Venda": "ve",  #
             "Vietnamese": "vi",
-            "Waray": "war", #
+            "Waray": "war",  #
             "Welsh": "cy",
-            "Wolaitta": "wal", #
+            "Wolaitta": "wal",  #
             "Wolof": "wol",
             "Xhosa": "xh",
             "Yiddish": "yi",
             "Yoruba": "yo",
-            "Yucatán Maya": "yua", #
-            "Zarma": "dje", #
+            "Yucatán Maya": "yua",  #
+            "Zarma": "dje",  #
             "Zulu": "zu",
         }
 
@@ -213,7 +212,6 @@ class IcibaTranslateEngine:
         return None
 
     def translate(self, text, to_language, from_language="auto"):
-        myMap = {}
         r = requests.post(
             "https://ifanyi.iciba.com/index.php",
             params={
@@ -221,16 +219,16 @@ class IcibaTranslateEngine:
                 "m": "fy",
                 "client": "6",
                 "auth_user": "key_ciba",
-                "sign": (hashlib.md5(("6key_cibaifanyicjbysdlove1"+text).encode('utf-8')).hexdigest())[0:16]
+                "sign": (
+                    hashlib.md5(
+                        ("6key_cibaifanyicjbysdlove1" + text).encode("utf-8")
+                    ).hexdigest()
+                )[0:16],
             },
-            data={
-                "from": from_language,
-                "to": to_language,
-                "q": text
-            }).json()
+            data={"from": from_language, "to": to_language, "q": text},
+        ).json()
 
-        myMap['translated-text'] = r['content']['out']
-        return myMap
+        return {"translated-text": r["content"]["out"]}
 
 
 if __name__ == "__main__":

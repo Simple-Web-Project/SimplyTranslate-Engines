@@ -7,6 +7,7 @@ import json
 from datetime import datetime
 from translatepy.translators.deepl import DeeplTranslate
 
+
 class DeeplEngine:
     name = "deepl"
     display_name = "DeepL (Testing)"
@@ -19,7 +20,8 @@ class DeeplEngine:
     def get_supported_source_languages(self):
         return {"Autodetect": "auto", **self.get_supported_target_languages()}
 
-    def get_supported_target_languages(self): return {
+    def get_supported_target_languages(self):
+        return {
             "Bulgarian": "BG",
             "Chinese": "ZH",
             "Czech": "CS",
@@ -43,7 +45,7 @@ class DeeplEngine:
             "Slovak": "SK",
             "Slovenian": "SL",
             "Spanish": "ES",
-            "Swedish": "SV"
+            "Swedish": "SV",
         }
 
     def detect_language(self, text):
@@ -53,12 +55,10 @@ class DeeplEngine:
         return None
 
     def translate(self, text, to_language, from_language="auto"):
-        myMap = {}
-
         # NOTE: this takes insanely long to process
         translation = self.deepl.translate(text, to_language, from_language)
-        myMap['translated-text'] = translation
-        return myMap
+        return {"translated-text": translation}
+
 
 if __name__ == "__main__":
     engine = DeeplEngine()
@@ -66,4 +66,3 @@ if __name__ == "__main__":
     for i in range(1, 15):
         print(engine.translate("You are on the testing lane", "EN", "DE"))
         time.sleep(i)
-

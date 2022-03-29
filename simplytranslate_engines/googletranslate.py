@@ -309,7 +309,8 @@ class GoogleTranslateEngine:
         except:
             pass
 
-        if my_map["translated-text"] is None:
+        # Fallback if no translation was found in the previous response
+        if my_map.get("translated-text") is None:
             r = requests.get(
                 "https://translate.google.com/m",
                 params={"tl": to_language, "hl": to_language, "q": text},
@@ -325,6 +326,3 @@ class GoogleTranslateEngine:
 if __name__ == "__main__":
     print(GoogleTranslateEngine().translate("Hello Weird World!!\n\n\nHi!", "fr", "en"))
 
-    data = GoogleTranslateEngine().translate_advanced("House", "fr", "en")
-    json_object = json.dumps(data, ensure_ascii=False, indent=4)
-    print(json_object)

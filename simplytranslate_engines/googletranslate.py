@@ -139,46 +139,6 @@ class GoogleTranslateEngine:
         params = urlencode({"tl": language, "q": text.strip(), "client": "tw-ob"})
         return f"https://translate.google.com/translate_tts?{params}"
 
-    """
-    It turns out that the googleapis.com domain is being rate-limited which becomes problematic on large instances, because of that we use the "old" way
-    of fetching the translation using the mobile page
-
-    def translate(self, text, to_language, from_language="auto"):
-        r = requests.get(
-            "https://translate.googleapis.com/translate_a/single?dt=bd&dt=ex&dt=ld&dt=md&dt=rw&dt=rm&dt=ss&dt=t&dt=at&dt=qc",
-            params={
-                "client": "gtx", # client
-                "ie": "UTF-8", # input encoding
-                "oe": "UTF-8", # output encoding
-                "sl": from_language,
-                "tl": to_language,
-                "hl": to_language,
-                "q": text
-            }
-        )
-
-        try:
-            j = json.loads(r.text)
-
-            request_body = j[0]
-            translation = ""
-
-            for i in range(len(request_body)):
-                if request_body[i][0] != None:
-                    translation += request_body[i][0]
-
-            return translation
-
-            # This will probably be used in a future version
-            #definition_body = request_body[1][0]
-        except Exception as e:
-            print("Error translating using Google Translate:")
-            print(str(e))
-            pass
-
-        return ""
-    """
-
     def translate(self, text, to_language, from_language="auto"):
         my_map = {}
         try:
@@ -202,14 +162,6 @@ class GoogleTranslateEngine:
             data = data[0][2]
             data = json.loads(data)
 
-            translation_data = data[1][0][0]
-            translation_data = translation_data[len(translation_data) - 1]
-
-            translation = " ".join(item[0] for item in translation_data).replace(
-                "\n ", "\n"
-            )
-
-            my_map["translated-text"] = translation
             try:
                 my_map["definitions"] = {}
                 for x in range(0, len(data[3][1][0])):
@@ -309,20 +261,17 @@ class GoogleTranslateEngine:
         except:
             pass
 
-        # Fallback if no translation was found in the previous response
-        if my_map.get("translated-text") is None:
-            r = requests.get(
-                "https://translate.google.com/m",
-                params={"tl": to_language, "hl": to_language, "q": text},
-            )
+        r = requests.get(
+            "https://translate.google.com/m",
+            params={"tl": to_language, "hl": to_language, "q": text},
+        )
 
-            doc = lxml.fromstring(r.text)
-            for container in doc.find_class("result-container"):
-                my_map["translated-text"] = container.text_content()
+        doc = lxml.fromstring(r.text)
+        for container in doc.find_class("result-container"):
+            my_map["translated-text"] = container.text_content()
 
         return my_map
 
 
 if __name__ == "__main__":
     print(GoogleTranslateEngine().translate("Hello Weird World!!\n\n\nHi!", "fr", "en"))
-

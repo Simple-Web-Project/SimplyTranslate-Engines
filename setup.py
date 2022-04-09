@@ -10,6 +10,7 @@ setup(
     packages = ["simplytranslate_engines"],
     install_requires = [
         "lxml",
-        "requests"
+        "requests",
+        "translatepy"
     ]
 )

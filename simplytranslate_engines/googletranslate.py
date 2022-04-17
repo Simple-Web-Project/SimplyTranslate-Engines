@@ -4,6 +4,11 @@ import requests
 import json
 import re
 
+if __name__ != "__main__":
+    from .utils import async_get, async_post
+else:
+    import asyncio
+    from utils import async_get, async_post
 
 class GoogleTranslateEngine:
     name = "google"
@@ -139,7 +144,7 @@ class GoogleTranslateEngine:
         params = urlencode({"tl": language, "q": text.strip(), "client": "tw-ob"})
         return f"https://translate.google.com/translate_tts?{params}"
 
-    def translate(self, text, to_language, from_language="auto"):
+    async def translate(self, text, to_language, from_language="auto"):
         my_map = {}
         try:
             url = "https://translate.google.com/_/TranslateWebserverUi/data/batchexecute?rpcids=MkEWBc&rt=c"
@@ -148,17 +153,16 @@ class GoogleTranslateEngine:
             req = [[["MkEWBc", req, None, "generic"]]]
             req = "f.req=" + quote(json.dumps(req))  # URL encode this
 
-            r = requests.post(
-                url,
-                headers={"Content-Type": "application/x-www-form-urlencoded"},
-                data=req,
-            )
 
-            num_match = re.search(r"\n(\d+)\n", r.text)
+            print(f"Getting the response for {text}")
+            response_text = await async_post(url, headers={"Content-Type": "application/x-www-form-urlencoded"}, data=req)
+
+
+            num_match = re.search(r"\n(\d+)\n", response_text)
             front_pad = num_match.span()[1]
             end_num = front_pad + int(num_match.groups()[0]) - 1
 
-            data = json.loads(r.text[front_pad:end_num])
+            data = json.loads(response_text[front_pad:end_num])
             data = data[0][2]
             data = json.loads(data)
 
@@ -261,17 +265,21 @@ class GoogleTranslateEngine:
         except:
             pass
 
-        r = requests.get(
-            "https://translate.google.com/m",
-            params={"tl": to_language, "hl": to_language, "q": text},
-        )
+        response_text = await async_get("https://translate.google.com/m", params={"tl": to_language, "hl": to_language, "q": text})
 
-        doc = lxml.fromstring(r.text)
+        doc = lxml.fromstring(response_text)
         for container in doc.find_class("result-container"):
             my_map["translated-text"] = container.text_content()
 
         return my_map
 
 
+async def test():
+    print(await asyncio.gather(
+        GoogleTranslateEngine().translate("Hallo", "en", "de"),
+        GoogleTranslateEngine().translate("Bonjour", "en", "fr"),
+        GoogleTranslateEngine().translate("Hola", "en", "es")))
+
 if __name__ == "__main__":
-    print(GoogleTranslateEngine().translate("Hello Weird World!!\n\n\nHi!", "fr", "en"))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(test())

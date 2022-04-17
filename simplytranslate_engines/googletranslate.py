@@ -1,6 +1,5 @@
 import lxml.html as lxml
 from urllib.parse import urlencode, quote
-import requests
 import json
 import re
 
@@ -9,6 +8,7 @@ if __name__ != "__main__":
 else:
     import asyncio
     from utils import async_get, async_post
+
 
 class GoogleTranslateEngine:
     name = "google"
@@ -153,10 +153,12 @@ class GoogleTranslateEngine:
             req = [[["MkEWBc", req, None, "generic"]]]
             req = "f.req=" + quote(json.dumps(req))  # URL encode this
 
-
             print(f"Getting the response for {text}")
-            response_text = await async_post(url, headers={"Content-Type": "application/x-www-form-urlencoded"}, data=req)
-
+            response_text = await async_post(
+                url,
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                data=req,
+            )
 
             num_match = re.search(r"\n(\d+)\n", response_text)
             front_pad = num_match.span()[1]
@@ -265,7 +267,10 @@ class GoogleTranslateEngine:
         except:
             pass
 
-        response_text = await async_get("https://translate.google.com/m", params={"tl": to_language, "hl": to_language, "q": text})
+        response_text = await async_get(
+            "https://translate.google.com/m",
+            params={"tl": to_language, "hl": to_language, "q": text},
+        )
 
         doc = lxml.fromstring(response_text)
         for container in doc.find_class("result-container"):
@@ -275,10 +280,14 @@ class GoogleTranslateEngine:
 
 
 async def test():
-    print(await asyncio.gather(
-        GoogleTranslateEngine().translate("Hallo", "en", "de"),
-        GoogleTranslateEngine().translate("Bonjour", "en", "fr"),
-        GoogleTranslateEngine().translate("Hola", "en", "es")))
+    print(
+        await asyncio.gather(
+            GoogleTranslateEngine().translate("Hallo", "en", "de"),
+            GoogleTranslateEngine().translate("Bonjour", "en", "fr"),
+            GoogleTranslateEngine().translate("Hola", "en", "es"),
+        )
+    )
+
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

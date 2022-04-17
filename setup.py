@@ -12,6 +12,7 @@ setup(
         "lxml",
         "requests",
         "translatepy",
-        "aiohttp"
+        "aiohttp",
+        "aiocache"
     ]
 )

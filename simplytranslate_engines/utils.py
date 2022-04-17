@@ -1,3 +1,6 @@
+import aiohttp
+import asyncio
+
 def get_engine(engine_name, engines, default_engine):
     """
     Returns the corresponding engine for `engine_name` from `engines`, or
@@ -55,3 +58,15 @@ def to_lang_code(lang, engine, type_="source"):
             return value
 
     return None
+
+# only the parameters that are ever being used will be added here to avoid clutter
+async def async_get(url: str, params={}):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, params=params) as resp:
+            return await resp.text()
+
+async def async_post(url: str, headers={}, data=""):
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=headers, data=data) as resp:
+            return await resp.text()
+

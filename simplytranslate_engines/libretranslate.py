@@ -3,10 +3,11 @@ from aiocache import cached
 
 
 if __name__ != "__main__":
-   from .utils import async_post
+    from .utils import async_post
 else:
     import asyncio
     from utils import async_post
+
 
 class LibreTranslateEngine:
     def __init__(self, url, api_key=None):

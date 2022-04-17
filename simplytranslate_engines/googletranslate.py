@@ -14,10 +14,10 @@ class GoogleTranslateEngine:
     name = "google"
     display_name = "Google"
 
-    def get_supported_source_languages(self):
+    async def get_supported_source_languages(self):
         return {"Autodetect": "auto", **self.get_supported_target_languages()}
 
-    def get_supported_target_languages(self):
+    async def get_supported_target_languages(self):
         return {
             "Afrikaans": "af",
             "Albanian": "sq",
@@ -129,10 +129,10 @@ class GoogleTranslateEngine:
             "Zulu": "zu",
         }
 
-    def detect_language(self, text):
+    async def detect_language(self, text):
         return None
 
-    def get_tts(self, text, language):
+    async def get_tts(self, text, language):
         if text == None or language == None:
             return None
         elif len(text) == 0 or len(language) == 0:

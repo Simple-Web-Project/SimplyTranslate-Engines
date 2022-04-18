@@ -20,7 +20,7 @@ class LibreTranslateEngine:
     _supported_languages = None
 
     async def get_supported_source_languages(self):
-        return {"Autodetect": "auto", **self.get_supported_target_languages()}
+        return {"Autodetect": "auto", **await self.get_supported_target_languages()}
 
     # cache for one week
     @cached(ttl=604800)

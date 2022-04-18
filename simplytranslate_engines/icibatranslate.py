@@ -1,15 +1,17 @@
 import requests
 import hashlib
+import asyncio
 
+#TODO: Make this truly async!
 
 class IcibaTranslateEngine:
     name = "iciba"
     display_name = "ICIBA"
 
-    def get_supported_source_languages(self):
+    async def get_supported_source_languages(self):
         return {"Autodetect": "auto", **self.get_supported_target_languages()}
 
-    def get_supported_target_languages(self):
+    async def get_supported_target_languages(self):
         return {
             # ICIBA does have an API, but they return Chinese names.
             # For languages already present in Google translate, the English
@@ -205,13 +207,13 @@ class IcibaTranslateEngine:
             "Zulu": "zu",
         }
 
-    def detect_language(self, text):
+    async def detect_language(self, text):
         return None
 
-    def get_tts(self, text, language):
+    async def get_tts(self, text, language):
         return None
 
-    def translate(self, text, to_language, from_language="auto"):
+    async def translate(self, text, to_language, from_language="auto"):
         r = requests.post(
             "https://ifanyi.iciba.com/index.php",
             params={
@@ -230,6 +232,18 @@ class IcibaTranslateEngine:
 
         return {"translated-text": r["content"]["out"]}
 
+async def test():
+    e = IcibaTranslateEngine()
+    print(
+        await asyncio.gather(
+            e.translate("Hallo", "en", "de"),
+            e.translate("Bonjour", "en", "fr"),
+            e.translate("Hola", "en", "es"),
+        )
+    )
+
 
 if __name__ == "__main__":
-    print(IcibaTranslateEngine().translate("hello", "fr", "en"))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(test())
+

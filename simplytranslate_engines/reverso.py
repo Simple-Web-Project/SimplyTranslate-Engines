@@ -1,4 +1,5 @@
 import requests
+import asyncio
 
 #TODO: Make this actually async!
 

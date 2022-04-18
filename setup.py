@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name = "simplytranslate_engines",
-    version = "0.0.1",
+    version = "0.0.2",
     url = "https://codeberg.org/SimpleWeb/SimplyTranslate-Engines",
 
     license = "AGPLv3 or later",

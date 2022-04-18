@@ -60,12 +60,12 @@ def to_lang_code(lang, engine, type_="source"):
     return None
 
 # only the parameters that are ever being used will be added here to avoid clutter
-async def async_get(url: str, params={}):
+async def async_get(url: str, params={}) -> str:
     async with aiohttp.ClientSession() as session:
         async with session.get(url, params=params) as resp:
             return await resp.text()
 
-async def async_post(url: str, headers={}, data=""):
+async def async_post(url: str, headers={}, data="") -> str:
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, data=data) as resp:
             return await resp.text()

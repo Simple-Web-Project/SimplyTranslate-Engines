@@ -3,10 +3,10 @@ from aiocache import cached
 
 
 if __name__ != "__main__":
-    from .utils import async_post
+    from .utils import async_post, async_get
 else:
     import asyncio
-    from utils import async_post
+    from utils import async_post, async_get
 
 
 class LibreTranslateEngine:
@@ -28,7 +28,7 @@ class LibreTranslateEngine:
         if self._supported_languages is not None:
             return self._supported_languages
 
-        response = json.loads(await async_post(f"{self.url}/languages"))
+        response = json.loads(await async_get(f"{self.url}/languages"))
 
         self._supported_languages = {lang["name"]: lang["code"] for lang in response}
 
@@ -84,6 +84,7 @@ async def test():
     )
 
     print(await e.detect_language("Rechtsanwalt"))
+    print(await e.get_supported_source_languages())
 
 
 if __name__ == "__main__":

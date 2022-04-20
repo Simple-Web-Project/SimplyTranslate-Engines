@@ -153,7 +153,6 @@ class GoogleTranslateEngine:
             req = [[["MkEWBc", req, None, "generic"]]]
             req = "f.req=" + quote(json.dumps(req))  # URL encode this
 
-            print(f"Getting the response for {text}")
             response_text = await async_post(
                 url,
                 headers={"Content-Type": "application/x-www-form-urlencoded"},

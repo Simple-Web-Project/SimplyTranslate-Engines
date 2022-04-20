@@ -70,7 +70,6 @@ class ReversoTranslateEngine:
             translated_text = text
         else:
             r = await self.call_api(text, to_language, from_language)
-            print(r)
             translated_text = r["translation"][0]
         return {"translated-text": translated_text}
 

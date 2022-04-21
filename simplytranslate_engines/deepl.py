@@ -19,7 +19,7 @@ class DeeplEngine:
         self.deepl = DeeplTranslate()
 
     async def get_supported_source_languages(self):
-        return {"Autodetect": "auto", **self.get_supported_target_languages()}
+        return {"Autodetect": "auto", **await self.get_supported_target_languages()}
 
     async def get_supported_target_languages(self):
         return {
@@ -49,13 +49,13 @@ class DeeplEngine:
             "Swedish": "SV",
         }
 
-    async def detect_language(self, text):
+    async def detect_language(self, text: str):
         return None
 
-    async def get_tts(self, text, language):
+    async def get_tts(self, text: str, language: str):
         return None
 
-    async def translate(self, text, to_language, from_language="auto"):
+    async def translate(self, text: str, to_language: str, from_language: str="auto"):
         # NOTE: this takes insanely long to process
         try:
             translation = self.deepl.translate(text, to_language, from_language)

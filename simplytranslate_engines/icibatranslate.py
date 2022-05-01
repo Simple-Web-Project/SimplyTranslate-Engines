@@ -3,7 +3,6 @@ import hashlib
 import asyncio
 
 #TODO: Make this truly async!
-
 class IcibaTranslateEngine:
     name = "iciba"
     display_name = "ICIBA"
@@ -207,13 +206,13 @@ class IcibaTranslateEngine:
             "Zulu": "zu",
         }
 
-    async def detect_language(self, text):
+    async def detect_language(self, text: str):
         return None
 
-    async def get_tts(self, text, language):
+    async def get_tts(self, text: str, language: str):
         return None
 
-    async def translate(self, text, to_language, from_language="auto"):
+    async def translate(self, text: str, to_language: str, from_language: str="auto"):
         r = requests.post(
             "https://ifanyi.iciba.com/index.php",
             params={
@@ -230,7 +229,10 @@ class IcibaTranslateEngine:
             data={"from": from_language, "to": to_language, "q": text},
         ).json()
 
-        return {"translated-text": r["content"]["out"]}
+        return {
+            "translated-text": r["content"]["out"],
+            "source_language": from_language
+        }
 
 async def test():
     e = IcibaTranslateEngine()

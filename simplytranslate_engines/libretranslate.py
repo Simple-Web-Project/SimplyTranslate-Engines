@@ -34,7 +34,7 @@ class LibreTranslateEngine:
 
         return self._supported_languages
 
-    async def detect_language(self, text):
+    async def detect_language(self, text: str):
         form = {"q": text}
 
         if self.api_key is not None:
@@ -51,10 +51,10 @@ class LibreTranslateEngine:
 
         return max(response, key=lambda item: item["confidence"])["language"]
 
-    async def get_tts(self, text, language):
+    async def get_tts(self, text: str, language: str):
         return None
 
-    async def translate(self, text, to_language, from_language="auto"):
+    async def translate(self, text: str, to_language: str, from_language: str="auto"):
         myMap = {}
         form = {"q": text, "source": from_language, "target": to_language}
 
@@ -70,7 +70,10 @@ class LibreTranslateEngine:
             translated_text = response["error"]
         else:
             translated_text = "odd, something went wrong"
-        return {"translated-text": translated_text}
+        return {
+            "translated-text": translated_text,
+            "source_language": from_language
+        }
 
 
 async def test():

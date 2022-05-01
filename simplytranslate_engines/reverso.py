@@ -32,7 +32,7 @@ class ReversoTranslateEngine:
             "Ukrainian": "ukr",
         }
 
-    async def call_api(self, text, to_language, from_language) -> dict:
+    async def call_api(self, text: str, to_language: str, from_language: str) -> dict:
         # `contextResults` must be False for language detection
         r = requests.post(
             "https://api.reverso.net/translate/v1/translation",
@@ -55,15 +55,15 @@ class ReversoTranslateEngine:
         ).json()
         return r
 
-    async def detect_language(self, text):
+    async def detect_language(self, text: str):
         # Any language pair works here, does not affect result
         r = await self.call_api(text, "eng", "fra")
         return r["languageDetection"]["detectedLanguage"]
 
-    async def get_tts(self, text, language):
+    async def get_tts(self, text: str, language: str):
         return None
 
-    async def translate(self, text, to_language, from_language="auto"):
+    async def translate(self, text: str, to_language: str, from_language: str="auto"):
         if from_language == "auto":
             from_language = self.detect_language(text)
         if from_language == to_language:
@@ -71,7 +71,10 @@ class ReversoTranslateEngine:
         else:
             r = await self.call_api(text, to_language, from_language)
             translated_text = r["translation"][0]
-        return {"translated-text": translated_text}
+        return {
+            "translated-text": translated_text,
+            "source_language": from_language
+        }
 
 
 async def test():

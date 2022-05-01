@@ -129,10 +129,10 @@ class GoogleTranslateEngine:
             "Zulu": "zu",
         }
 
-    async def detect_language(self, text):
+    async def detect_language(self, text: str):
         return None
 
-    async def get_tts(self, text, language):
+    async def get_tts(self, text: str, language: str):
         if text == None or language == None:
             return None
         elif len(text) == 0 or len(language) == 0:
@@ -144,7 +144,7 @@ class GoogleTranslateEngine:
         params = urlencode({"tl": language, "q": text.strip(), "client": "tw-ob"})
         return f"https://translate.google.com/translate_tts?{params}"
 
-    async def translate(self, text, to_language, from_language="auto"):
+    async def translate(self, text: str, to_language: str, from_language: str="auto"):
         my_map = {}
         try:
             url = "https://translate.google.com/_/TranslateWebserverUi/data/batchexecute?rpcids=MkEWBc&rt=c"
@@ -274,6 +274,8 @@ class GoogleTranslateEngine:
         doc = lxml.fromstring(response_text)
         for container in doc.find_class("result-container"):
             my_map["translated-text"] = container.text_content()
+
+        my_map["source_language"] = from_language
 
         return my_map
 

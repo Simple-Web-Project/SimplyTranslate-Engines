@@ -62,7 +62,10 @@ class DeeplEngine:
         except Exception as e:
             translation = "Failed to translate! Sorry!"
 
-        return {"translated-text": translation}
+        return {
+            "translated-text": translation,
+            "source_language": from_language
+        }
 
 async def test():
     e = DeeplEngine()

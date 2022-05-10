@@ -65,7 +65,7 @@ class ReversoTranslateEngine:
 
     async def translate(self, text: str, to_language: str, from_language: str="auto"):
         if from_language == "auto":
-            from_language = self.detect_language(text)
+            from_language = await self.detect_language(text)
         if from_language == to_language:
             translated_text = text
         else:

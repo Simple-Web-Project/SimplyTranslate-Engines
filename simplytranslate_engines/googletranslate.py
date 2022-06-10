@@ -284,6 +284,8 @@ class GoogleTranslateEngine:
                 my_map["definitions"] = {}
                 for x in range(0, len(data[3][1][0])):
                     definition_type = data[3][1][0][x][0]
+                    if definition_type is None:
+                        definition_type = "unknown"
                     my_map["definitions"][definition_type] = []
                     for i in range(0, len(data[3][1][0][x][1])):
                         my_map["definitions"][definition_type].append({})
@@ -348,6 +350,8 @@ class GoogleTranslateEngine:
                 for x in range(0, len(translation_box)):
                     try:
                         translation_type = translation_box[x][0]
+                        if translation_type is None:
+                            translation_type = "unknown"
                         my_map["translations"][translation_type] = {}
                         translation_names_box = translation_box[x][1]
                         for i in range(0, len(translation_names_box)):

@@ -58,8 +58,8 @@ class GoogleTranslateEngine:
     async def get_supported_target_languages(self):
         return {
             lang_name: lang_code
-            for lang_code, lang_name in await self._get_langs_from_google(
-                type="target"
+            for lang_code, lang_name in (
+                await self._get_langs_from_google(type="target")
             ).items()
         }
 

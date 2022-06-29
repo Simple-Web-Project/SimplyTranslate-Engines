@@ -1,7 +1,8 @@
 import lxml.html as lxml
-from urllib.parse import urlencode, quote
+from urllib.parse import urlencode, quote, urlparse, parse_qs
 import json
 import re
+from aiocache import cached
 
 if __name__ != "__main__":
     from .utils import async_get, async_post
@@ -14,232 +15,52 @@ class GoogleTranslateEngine:
     name = "google"
     display_name = "Google"
 
-    async def get_supported_source_languages(self):
-        # Source languages and target languages seem to be different in Google,
-        # so we don't have one depend on the otheer.
+    async def _get_langs_from_google(self, **kwargs):
+        if kwargs["type"] == "source":
+            langs_type = "sl"
+        elif kwargs["type"] == "target":
+            langs_type = "tl"
+        else:
+            raise ArgumentError(
+                f"`type` must be either `source` or `target`, but {kwargs['type']} was passed"
+            )
+
+        doc = lxml.fromstring(
+            await async_get(
+                "https://translate.google.com/m",
+                params={"sl": "en", "tl": "en", "mui": langs_type, "hl": "en-US"},
+            )
+        )
+
         return {
-            "Autodetect": "auto",
-            "Afrikaans": "af",
-            "Albanian": "sq",
-            "Amharic": "am",
-            "Arabic": "ar",
-            "Armenian": "hy",
-            "Azerbaijani": "az",
-            "Basque": "eu",
-            "Belarusian": "be",
-            "Bengali": "bn",
-            "Bosnian": "bs",
-            "Bulgarian": "bg",
-            "Catalan": "ca",
-            "Cebuano": "ceb",
-            "Chichewa": "ny",
-            "Chinese": "zh-CN",
-            "Corsican": "co",
-            "Croatian": "hr",
-            "Czech": "cs",
-            "Danish": "da",
-            "Dutch": "nl",
-            "English": "en",
-            "Esperanto": "eo",
-            "Estonian": "et",
-            "Filipino": "tl",
-            "Finnish": "fi",
-            "French": "fr",
-            "Frisian": "fy",
-            "Galician": "gl",
-            "Georgian": "ka",
-            "German": "de",
-            "Greek": "el",
-            "Gujarati": "gu",
-            "Haitian Creole": "ht",
-            "Hausa": "ha",
-            "Hawaiian": "haw",
-            "Hebrew": "iw",
-            "Hindi": "hi",
-            "Hmong": "hmn",
-            "Hungarian": "hu",
-            "Icelandic": "is",
-            "Igbo": "ig",
-            "Indonesian": "id",
-            "Irish": "ga",
-            "Italian": "it",
-            "Japanese": "ja",
-            "Javanese": "jw",
-            "Kannada": "kn",
-            "Kazakh": "kk",
-            "Khmer": "km",
-            "Kinyarwanda": "rw",
-            "Korean": "ko",
-            "Kurdish (Kurmanji)": "ku",
-            "Kyrgyz": "ky",
-            "Lao": "lo",
-            "Latin": "la",
-            "Latvian": "lv",
-            "Lithuanian": "lt",
-            "Luxembourgish": "lb",
-            "Macedonian": "mk",
-            "Malagasy": "mg",
-            "Malay": "ms",
-            "Malayalam": "ml",
-            "Maltese": "mt",
-            "Maori": "mi",
-            "Marathi": "mr",
-            "Mongolian": "mn",
-            "Myanmar (Burmese)": "my",
-            "Nepali": "ne",
-            "Norwegian": "no",
-            "Odia (Oriya)": "or",
-            "Pashto": "ps",
-            "Persian": "fa",
-            "Polish": "pl",
-            "Portuguese": "pt",
-            "Punjabi": "pa",
-            "Romanian": "ro",
-            "Russian": "ru",
-            "Samoan": "sm",
-            "Scots Gaelic": "gd",
-            "Serbian": "sr",
-            "Sesotho": "st",
-            "Shona": "sn",
-            "Sindhi": "sd",
-            "Sinhala": "si",
-            "Slovak": "sk",
-            "Slovenian": "sl",
-            "Somali": "so",
-            "Spanish": "es",
-            "Sundanese": "su",
-            "Swahili": "sw",
-            "Swedish": "sv",
-            "Tajik": "tg",
-            "Tamil": "ta",
-            "Tatar": "tt",
-            "Telugu": "te",
-            "Thai": "th",
-            "Turkish": "tr",
-            "Turkmen": "tk",
-            "Ukrainian": "uk",
-            "Urdu": "ur",
-            "Uyghur": "ug",
-            "Uzbek": "uz",
-            "Vietnamese": "vi",
-            "Welsh": "cy",
-            "Xhosa": "xh",
-            "Yiddish": "yi",
-            "Yoruba": "yo",
-            "Zulu": "zu",
+            # Language code: language name
+            parse_qs(urlparse(item.find("a").get("href")).query)[langs_type][
+                0
+            ]: item.find("a").text_content()
+            for item in doc.find_class("language-item")
         }
 
+    # Cache for one week.
+    @cached(ttl=604800)
+    async def get_supported_source_languages(self):
+        langs = await self._get_langs_from_google(type="source")
+
+        # It's originally "Detect language," but this is what we use.
+        langs["auto"] = "Autodetect"
+
+        # It's originally "Chinese", but this is clearer.
+        langs["zh-CN"] = "Chinese (Simplified)"
+
+        return {lang_name: lang_code for lang_code, lang_name in langs.items()}
+
+    # Cache for one week.
+    @cached(ttl=604800)
     async def get_supported_target_languages(self):
         return {
-            "Afrikaans": "af",
-            "Albanian": "sq",
-            "Amharic": "am",
-            "Arabic": "ar",
-            "Armenian": "hy",
-            "Azerbaijani": "az",
-            "Basque": "eu",
-            "Belarusian": "be",
-            "Bengali": "bn",
-            "Bosnian": "bs",
-            "Bulgarian": "bg",
-            "Catalan": "ca",
-            "Cebuano": "ceb",
-            "Chichewa": "ny",
-            "Chinese (Simplified)": "zh-CN",
-            "Chinese (Traditional)": "zh-TW",
-            "Corsican": "co",
-            "Croatian": "hr",
-            "Czech": "cs",
-            "Danish": "da",
-            "Dutch": "nl",
-            "English": "en",
-            "Esperanto": "eo",
-            "Estonian": "et",
-            "Filipino": "tl",
-            "Finnish": "fi",
-            "French": "fr",
-            "Frisian": "fy",
-            "Galician": "gl",
-            "Georgian": "ka",
-            "German": "de",
-            "Greek": "el",
-            "Gujarati": "gu",
-            "Haitian Creole": "ht",
-            "Hausa": "ha",
-            "Hawaiian": "haw",
-            "Hebrew": "iw",
-            "Hindi": "hi",
-            "Hmong": "hmn",
-            "Hungarian": "hu",
-            "Icelandic": "is",
-            "Igbo": "ig",
-            "Indonesian": "id",
-            "Irish": "ga",
-            "Italian": "it",
-            "Japanese": "ja",
-            "Javanese": "jw",
-            "Kannada": "kn",
-            "Kazakh": "kk",
-            "Khmer": "km",
-            "Kinyarwanda": "rw",
-            "Korean": "ko",
-            "Kurdish (Kurmanji)": "ku",
-            "Kyrgyz": "ky",
-            "Lao": "lo",
-            "Latin": "la",
-            "Latvian": "lv",
-            "Lithuanian": "lt",
-            "Luxembourgish": "lb",
-            "Macedonian": "mk",
-            "Malagasy": "mg",
-            "Malay": "ms",
-            "Malayalam": "ml",
-            "Maltese": "mt",
-            "Maori": "mi",
-            "Marathi": "mr",
-            "Mongolian": "mn",
-            "Myanmar (Burmese)": "my",
-            "Nepali": "ne",
-            "Norwegian": "no",
-            "Odia (Oriya)": "or",
-            "Pashto": "ps",
-            "Persian": "fa",
-            "Polish": "pl",
-            "Portuguese": "pt",
-            "Punjabi": "pa",
-            "Romanian": "ro",
-            "Russian": "ru",
-            "Samoan": "sm",
-            "Scots Gaelic": "gd",
-            "Serbian": "sr",
-            "Sesotho": "st",
-            "Shona": "sn",
-            "Sindhi": "sd",
-            "Sinhala": "si",
-            "Slovak": "sk",
-            "Slovenian": "sl",
-            "Somali": "so",
-            "Spanish": "es",
-            "Sundanese": "su",
-            "Swahili": "sw",
-            "Swedish": "sv",
-            "Tajik": "tg",
-            "Tamil": "ta",
-            "Tatar": "tt",
-            "Telugu": "te",
-            "Thai": "th",
-            "Turkish": "tr",
-            "Turkmen": "tk",
-            "Ukrainian": "uk",
-            "Urdu": "ur",
-            "Uyghur": "ug",
-            "Uzbek": "uz",
-            "Vietnamese": "vi",
-            "Welsh": "cy",
-            "Xhosa": "xh",
-            "Yiddish": "yi",
-            "Yoruba": "yo",
-            "Zulu": "zu",
+            lang_name: lang_code
+            for lang_code, lang_name in await self._get_langs_from_google(
+                type="target"
+            ).items()
         }
 
     async def detect_language(self, text: str):

@@ -219,10 +219,10 @@ class IcibaTranslateEngine:
                 "c": "trans",
                 "m": "fy",
                 "client": "6",
-                "auth_user": "key_ciba",
+                "auth_user": "key_web_fanyi",
                 "sign": (
                     hashlib.md5(
-                        ("6key_cibaifanyicjbysdlove1" + text).encode("utf-8")
+                        ("6key_web_fanyiifanyiweb8hc9s98e" + text).encode("utf-8")
                     ).hexdigest()
                 )[0:16],
             },
